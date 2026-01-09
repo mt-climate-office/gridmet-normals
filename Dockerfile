@@ -3,7 +3,7 @@ FROM rocker/geospatial:4
 
 # Install wget2 and other system dependencies
 RUN apt-get update && apt-get install -y \
-    wget2 \
+    rclone \
     libnetcdf-dev \
     netcdf-bin \
     && rm -rf /var/lib/apt/lists/*

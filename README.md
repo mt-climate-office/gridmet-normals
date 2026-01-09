@@ -17,7 +17,7 @@ The resulting normals are saved as Cloud Optimized GeoTIFFs (COGs) for efficient
 ### System Requirements
 
 - R
-- `wget2` command-line tool for downloading data
+- `rclone` command-line tool for downloading data
 
 ### R Package Dependencies
 
@@ -47,7 +47,7 @@ cd gridmet-normals
 
 2. Build and run using Docker Compose:
 ```bash
-docker-compose up --build --platform linux/amd64
+docker-compose up --build
 ```
 
 The `data/` directory will be created locally and mounted into the container to persist downloaded data and outputs.

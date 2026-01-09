@@ -30,27 +30,25 @@ gridmet_archive <-
   "https://www.northwestknowledge.net/metdata/data/"
 
 system2(
-  "wget2",
-  args =
-    c(
-      # "-q",            # quiet
-      "--progress=bar",
-      "-r",            # recursive
-      "-l1",
-      "-nd",           # no directories
-      "-nH",           # don't create host directories
-      "--cut-dirs=2",  # skip this many path components
-      
-      "--mirror",
-      "--timestamping",
-      "--no-parent",
-      
-      "-A", "*_[0-9][0-9][0-9][0-9].nc",  # accept only files ending with _YYYY.nc
-      "-R", "index.html,chill_hours_2025.nc",  # reject matching files
-      "--max-threads=8", # wget2 parallelization
-      "-P", "data/gridmet/daily",     # destination directory
-      gridmet_archive            # the URL to mirror
-    )
+  "rclone",
+  args = c(
+    'sync',
+    ' :http: data/gridmet/daily',
+    '--http-url', gridmet_archive,
+    '--filter "- *chill_hours*"',
+    '--filter "+ *_[0-9][0-9][0-9][0-9].nc"',
+    '--filter "- *"',
+    '--max-depth 1',
+    '--transfers 8',
+    '--multi-thread-streams 8',
+    '--multi-thread-cutoff 64M'
+    # '--dry-run',
+    # '--stats 0',
+    # '--verbose'
+  ),
+  env = c(
+    "RCLONE_CONFIG=/dev/null"
+  )
 )
 
 ## 2. Calculate monthly aggregates
@@ -82,10 +80,16 @@ if(!file.exists("data/gridmet/daily.checksum")){
       readr::read_csv("data/gridmet/daily.checksum"),
       by = "file",
       suffix = c("", ".old")) %>%
-    dplyr::mutate(process = checksum != checksum.old) %>%
-    dplyr::select(!checksum.old) %T>%
-    readr::write_csv("data/gridmet/daily.checksum")
+    dplyr::mutate(process = checksum != checksum.old) %T>%
+    {
+      dplyr::select(., !c(checksum.old, process)) %>%
+        readr::write_csv("data/gridmet/daily.checksum")
+    }
 }
+
+# Force Processing
+gridmet_daily %<>%
+  dplyr::mutate(process = TRUE)
 
 # Calculate monthly and yearly aggregations
 dir.create(
