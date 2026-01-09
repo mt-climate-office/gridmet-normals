@@ -41,10 +41,10 @@ system2(
     '--max-depth 1',
     '--transfers 8',
     '--multi-thread-streams 8',
-    '--multi-thread-cutoff 64M',
-    '--dry-run',
-    '--stats 0',
-    '--verbose'
+    '--multi-thread-cutoff 64M'#,
+    # '--dry-run',
+    # '--stats 0',
+    # '--verbose'
   ),
   env = c(
     "RCLONE_CONFIG=/dev/null"
