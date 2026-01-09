@@ -1,5 +1,5 @@
 # Use rocker/geospatial as base - includes R, sf, terra dependencies (GDAL, PROJ, GEOS)
-FROM rocker/geospatial:4.4.1
+FROM rocker/geospatial:4
 
 # Install wget2 and other system dependencies
 RUN apt-get update && apt-get install -y \
