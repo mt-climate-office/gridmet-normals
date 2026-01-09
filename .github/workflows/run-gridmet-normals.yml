@@ -1,0 +1,94 @@
+name: Run gridMET Normals
+
+# Only trigger manually - not on GitHub-hosted runners
+on:
+  workflow_dispatch:
+
+jobs:
+  run-normals:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Cache Homebrew packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            /home/linuxbrew/.linuxbrew
+          key: ${{ runner.os }}-homebrew-v1
+          restore-keys: |
+            ${{ runner.os }}-homebrew-
+      
+      - name: Install Homebrew
+        run: |
+          if [ ! -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
+            echo "Installing Homebrew..."
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || {
+              echo "Homebrew installation failed"
+              exit 1
+            }
+          else
+            echo "Homebrew already installed (from cache)"
+          fi
+          echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> $GITHUB_PATH
+      
+      - name: Install dependencies with Homebrew
+        run: |
+          # Check if packages are already installed
+          missing_packages=""
+          for pkg in r gdal geos proj netcdf udunits rclone; do
+            if ! brew list $pkg &>/dev/null; then
+              missing_packages="$missing_packages $pkg"
+            fi
+          done
+          
+          if [ -n "$missing_packages" ]; then
+            echo "Installing missing packages:$missing_packages"
+            brew install $missing_packages
+          else
+            echo "All packages already installed (from cache)"
+          fi
+      
+      - name: Cache R packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            /home/linuxbrew/.linuxbrew/lib/R/library
+          key: ${{ runner.os }}-r-packages-v1
+          restore-keys: |
+            ${{ runner.os }}-r-packages-
+      
+      - name: Install pak
+        run: |
+          R -e 'if (!require("pak", quietly = TRUE)) install.packages("pak", repos = sprintf("https://r-lib.github.io/p/pak/stable/%s/%s/%s", .Platform$pkgType, R.Version()$os, R.Version()$arch))'
+      
+      - name: Install R packages
+        run: |
+          R -e 'pak::pak(c("tidyverse", "sf?source", "terra?source", "digest", "furrr", "future.mirai", "mirai", "carrier"), ask = FALSE)'
+          R -e 'pak::pak("mt-climate-office/normals", ask = FALSE)'
+      
+      - name: Create data directory
+        run: |
+          mkdir -p data/gridmet/daily
+      
+      - name: Set timezone
+        run: |
+          sudo timedatectl set-timezone America/Denver
+      
+      - name: Run gridMET normals processing
+        run: |
+          Rscript gridmet-normals.r
+        env:
+          TZ: America/Denver
+      
+      - name: Upload data artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gridmet-normals-data
+          path: data/
+          retention-days: 30
