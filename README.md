@@ -112,27 +112,23 @@ docker run -v $(pwd)/data:/app/data gridmet-normals
 
 ### Running with GitHub Actions / act
 
-This repository includes a GitHub Actions workflow that can be run locally using [act](https://github.com/nektos/act). This allows you to execute the workflow in a local environment without using GitHub-hosted runners.
+This repository includes a GitHub Actions workflow that can be run locally using [act](https://github.com/nektos/act). This allows you to execute the workflow in a local environment without using GitHub-hosted runners. The workflow sets up the R environment and all dependencies directly through GitHub Actions steps, without requiring Docker.
 
 **Prerequisites:**
 - Install [act](https://github.com/nektos/act) following the instructions at https://github.com/nektos/act
-- Docker must be running on your system
 
 **Run the workflow locally:**
 ```bash
 act workflow_dispatch
 ```
 
-**Run with custom shared memory size:**
-```bash
-act workflow_dispatch -j run-normals --input shm_size=32g
-```
-
 The workflow will:
-1. Build the Docker image
-2. Run the gridMET normals processing
-3. Save results to the `data/` directory
-4. Create an artifact with the processed data
+1. Install system dependencies (rclone, NetCDF, GDAL, GEOS, PROJ, etc.)
+2. Set up R 4.4.0
+3. Install required R packages (tidyverse, sf, terra, normals, etc.)
+4. Run the gridMET normals processing script
+5. Save results to the `data/` directory
+6. Create an artifact with the processed data
 
 **Note:** The workflow is configured with `workflow_dispatch` trigger only, meaning it must be triggered manually and will not run automatically on GitHub-hosted runners.
 

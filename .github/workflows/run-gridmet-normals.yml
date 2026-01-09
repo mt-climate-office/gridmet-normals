@@ -3,12 +3,6 @@ name: Run gridMET Normals
 # Only trigger manually - not on GitHub-hosted runners
 on:
   workflow_dispatch:
-    inputs:
-      shm_size:
-        description: 'Shared memory size for the container (e.g., 16g)'
-        required: false
-        default: '16g'
-        type: string
 
 jobs:
   run-normals:
@@ -18,22 +12,67 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            rclone \
+            libnetcdf-dev \
+            netcdf-bin \
+            libgdal-dev \
+            gdal-bin \
+            libgeos-dev \
+            libproj-dev \
+            libudunits2-dev \
+            libssl-dev \
+            libxml2-dev \
+            libfontconfig1-dev \
+            libharfbuzz-dev \
+            libfribidi-dev \
+            libfreetype6-dev \
+            libpng-dev \
+            libtiff5-dev \
+            libjpeg-dev
+      
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.4.0'
+          use-public-rspm: true
+      
+      - name: Install pak
+        run: |
+          install.packages('pak', repos = sprintf('https://r-lib.github.io/p/pak/stable/%s/%s/%s', .Platform$pkgType, R.Version()$os, R.Version()$arch))
+        shell: Rscript {0}
+      
+      - name: Install R packages
+        run: |
+          pak::pak(c(
+            'tidyverse',
+            'sf?source',
+            'terra?source',
+            'digest',
+            'furrr',
+            'future.mirai',
+            'mirai',
+            'carrier'
+          ))
+          pak::pak('mt-climate-office/normals')
+        shell: Rscript {0}
+      
       - name: Create data directory
         run: |
-          mkdir -p data/gridmet
+          mkdir -p data/gridmet/daily
       
-      - name: Build Docker image
+      - name: Set timezone
         run: |
-          docker build -t gridmet-normals .
+          sudo timedatectl set-timezone America/Denver
       
       - name: Run gridMET normals processing
         run: |
-          docker run \
-            --platform linux/amd64 \
-            --shm-size ${{ inputs.shm_size }} \
-            -v ${{ github.workspace }}/data:/app/data \
-            -e TZ=America/Denver \
-            gridmet-normals
+          Rscript gridmet-normals.r
+        env:
+          TZ: America/Denver
       
       - name: Upload data artifacts
         uses: actions/upload-artifact@v4
