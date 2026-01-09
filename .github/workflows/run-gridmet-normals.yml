@@ -21,22 +21,16 @@ jobs:
       
       - name: Install dependencies with Homebrew
         run: |
-          brew install r
-          brew install gdal
-          brew install geos
-          brew install proj
-          brew install netcdf
-          brew install udunits
-          brew install rclone
+          brew install r gdal geos proj netcdf udunits rclone
       
       - name: Install pak
         run: |
-          R -e "install.packages('pak', repos = sprintf('https://r-lib.github.io/p/pak/stable/%s/%s/%s', .Platform\$pkgType, R.Version()\$os, R.Version()\$arch))"
+          R -e 'install.packages("pak", repos = sprintf("https://r-lib.github.io/p/pak/stable/%s/%s/%s", .Platform$pkgType, R.Version()$os, R.Version()$arch))'
       
       - name: Install R packages
         run: |
-          R -e "pak::pak(c('tidyverse', 'sf?source', 'terra?source', 'digest', 'furrr', 'future.mirai', 'mirai', 'carrier'))"
-          R -e "pak::pak('mt-climate-office/normals')"
+          R -e 'pak::pak(c("tidyverse", "sf?source", "terra?source", "digest", "furrr", "future.mirai", "mirai", "carrier"))'
+          R -e 'pak::pak("mt-climate-office/normals")'
       
       - name: Create data directory
         run: |
