@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  gridmet-normals:
+    build: .
+    container_name: gridmet-normals
+    volumes:
+      # Mount data directory to persist downloads and outputs
+      - ./data:/app/data
+    environment:
+      # Set timezone if needed
+      - TZ=America/Denver
+    restart: "no"
+    # Resource limits (adjust as needed)
+    deploy:
+      resources:
+        limits:
+          cpus: '8'
+          memory: 16G
+        reservations:
+          cpus: '4'
+          memory: 8G
