@@ -6,10 +6,10 @@
 cd "$(dirname "$0")"
 
 # Run the Docker container
-docker-compose up --build
+docker compose up --build
 
 # Optional: Clean up stopped containers
-docker-compose down
+docker compose down
 
 # Log completion
 echo "gridmet-normals run completed at $(date)" >> /var/log/gridmet-normals.log
