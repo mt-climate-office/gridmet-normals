@@ -1,17 +1,17 @@
-pak::pak(
-  c(
-    "tidyverse",
-    "sf?source",
-    "terra?source",
-    "digest",
-    "furrr",
-    "future.mirai",
-    "mirai",
-    "carrier"
-  )
-)
-
-pak::pak("mt-climate-office/normals")
+# pak::pak(
+#   c(
+#     "tidyverse",
+#     "sf?source",
+#     "terra?source",
+#     "digest",
+#     "furrr",
+#     "future.mirai",
+#     "mirai",
+#     "carrier"
+#   )
+# )
+# 
+# pak::pak("mt-climate-office/normals")
 
 library(normals)
 library(magrittr)
@@ -41,10 +41,10 @@ system2(
     '--max-depth 1',
     '--transfers 8',
     '--multi-thread-streams 8',
-    '--multi-thread-cutoff 64M'
-    # '--dry-run',
-    # '--stats 0',
-    # '--verbose'
+    '--multi-thread-cutoff 64M',
+    '--dry-run',
+    '--stats 0',
+    '--verbose'
   ),
   env = c(
     "RCLONE_CONFIG=/dev/null"
@@ -138,7 +138,7 @@ aggregate_timestep <-
     )
   }
 
-future::plan(future.mirai::mirai_multisession)
+future::plan(future.mirai::mirai_multisession(workers = 8))
 
 gridmet_summaries <-
   gridmet_daily %>%
@@ -177,7 +177,7 @@ gridmet_summaries <-
 future::plan(sequential)
 
 ## Calculate Normals
-mirai::daemons(10)
+mirai::daemons(8)
 
 dir.create(
   "data/gridmet/normals",
