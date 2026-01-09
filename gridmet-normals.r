@@ -241,7 +241,7 @@ gridmet_normals <-
   ) %>%
   dplyr::mutate(
     month = tidyr::replace_na(as.character(month), "annual"),
-    descriptor = terra::time(test$rast[[1]], format = "years") %>%
+    descriptor = terra::time(rast, format = "years") %>%
       range() %>%
       paste(collapse = "–") %>%
       glue::glue("{variable}_",., "_{month}"),
