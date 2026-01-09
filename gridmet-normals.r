@@ -138,7 +138,7 @@ aggregate_timestep <-
     )
   }
 
-future::plan(future.mirai::mirai_multisession, workers = 4)
+future::plan(future.mirai::mirai_multisession, workers = 8)
 
 gridmet_summaries <-
   gridmet_daily %>%
@@ -177,7 +177,7 @@ gridmet_summaries <-
 future::plan(sequential)
 
 ## Calculate Normals
-mirai::daemons(4)
+mirai::daemons(8)
 
 dir.create(
   "data/gridmet/normals",
