@@ -47,7 +47,7 @@ cd gridmet-normals
 
 2. Build and run using Docker Compose:
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 The `data/` directory will be created locally and mounted into the container to persist downloaded data and outputs.
@@ -84,7 +84,7 @@ pak::pak(
 
 **One-time execution:**
 ```bash
-docker-compose up
+docker compose up
 ```
 
 **Automated daily execution with cron:**
