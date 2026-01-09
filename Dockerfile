@@ -22,11 +22,14 @@ RUN R -e "install.packages('pak', repos = 'https://r-lib.github.io/p/pak/stable/
       'tidyverse', \
       'sf?source', \
       'terra?source', \
-      'mt-climate-office/normals', \
       'digest', \
       'furrr', \
       'future.mirai', \
-      'mirai' \
+      'mirai', \
+      'carrier' \
+    ))" && \
+    R -e "pak::pak(c( \
+      'mt-climate-office/normals' \
     ))"
 
 # Create data directory with appropriate permissions

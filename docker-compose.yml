@@ -1,7 +1,6 @@
-version: '3.8'
-
 services:
   gridmet-normals:
+    platform: linux/amd64
     build: .
     container_name: gridmet-normals
     volumes:

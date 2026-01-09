@@ -3,13 +3,15 @@ pak::pak(
     "tidyverse",
     "sf?source",
     "terra?source",
-    "mt-climate-office/normals",
     "digest",
     "furrr",
     "future.mirai",
-    "mirai"
+    "mirai",
+    "carrier"
   )
 )
+
+pak::pak("mt-climate-office/normals")
 
 library(normals)
 library(magrittr)
@@ -99,12 +101,12 @@ dir.create(
 )
 
 aggregate_timestep <-
-  function(x, func, timestep = "monthly"){
+  function(x, func, timestep = "monthly", force = FALSE){
     
     outfile <-
       stringr::str_replace(x, "daily", timestep)
     
-    if(file.exists(outfile))
+    if(file.exists(outfile) & !force)
       return(outfile)
     
     orig <- 
@@ -164,8 +166,8 @@ gridmet_summaries <-
   ) %>%
   dplyr::filter(process) %>%
   dplyr::mutate(
-    monthly = furrr::future_map2_chr(file, func, aggregate_timestep, timestep = "monthly"),
-    yearly = furrr::future_map2_chr(file, func, aggregate_timestep, timestep = "yearly")
+    monthly = furrr::future_map2_chr(file, func, aggregate_timestep, timestep = "monthly", force = TRUE),
+    yearly = furrr::future_map2_chr(file, func, aggregate_timestep, timestep = "yearly", force = TRUE)
   )
 
 future::plan(sequential)
