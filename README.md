@@ -16,7 +16,7 @@ The resulting normals are saved as Cloud Optimized GeoTIFFs (COGs) for efficient
 
 ### System Requirements
 
-- R (version 4.0 or higher recommended)
+- R
 - `wget2` command-line tool for downloading data
 
 ### R Package Dependencies
@@ -138,7 +138,7 @@ Normal files are named following this pattern:
 
 Where:
 - `{variable}`: Climate variable (e.g., pr, tmmx, tmmn)
-- `{year_range}`: Range of years used (e.g., 1991–2020)
+- `{year_range}`: Range of years used (e.g., 1995–2024, dynamically calculated from the 30 most recent complete years)
 - `{period}`: Either a month name or "annual"
 
 ## Data Source
@@ -152,9 +152,9 @@ Abatzoglou, J.T., 2013. Development of gridded surface meteorological data for e
 
 This project is developed by the [Montana Climate Office](https://climate.umt.edu/).
 
-## Author
+## Contributors
 
-Kyle Bocinsky (bocinsky@gmail.com)
+See git commit history for contributor information.
 
 ## Notes
 
