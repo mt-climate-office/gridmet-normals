@@ -1,0 +1,44 @@
+name: Run gridMET Normals
+
+# Only trigger manually - not on GitHub-hosted runners
+on:
+  workflow_dispatch:
+    inputs:
+      shm_size:
+        description: 'Shared memory size for the container (e.g., 16g)'
+        required: false
+        default: '16g'
+        type: string
+
+jobs:
+  run-normals:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Create data directory
+        run: |
+          mkdir -p data/gridmet
+      
+      - name: Build Docker image
+        run: |
+          docker build -t gridmet-normals .
+      
+      - name: Run gridMET normals processing
+        run: |
+          docker run \
+            --platform linux/amd64 \
+            --shm-size ${{ inputs.shm_size }} \
+            -v ${{ github.workspace }}/data:/app/data \
+            -e TZ=America/Denver \
+            gridmet-normals
+      
+      - name: Upload data artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gridmet-normals-data
+          path: data/
+          retention-days: 30
