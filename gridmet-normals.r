@@ -132,7 +132,7 @@ aggregate_timestep <-
         terra::`units<-`(terra::units(orig)[1]) %>%
         terra::writeCDF(filename = outfile,
                         overwrite = TRUE,
-                        compression = 9) %>%
+                        compression = 5) %>%
         terra::sources() %>%
         fs::path_rel()
     )
