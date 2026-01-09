@@ -24,6 +24,7 @@ The resulting normals are saved as Cloud Optimized GeoTIFFs (COGs) for efficient
 The script requires the following R packages:
 
 - `tidyverse` - Data manipulation and visualization
+- `magrittr` - Pipe operators (loaded explicitly, though included in tidyverse)
 - `sf` - Spatial features handling
 - `terra` - Spatial data processing
 - `normals` - Custom package for calculating climate normals (from `mt-climate-office/normals`)
