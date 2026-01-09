@@ -138,7 +138,7 @@ aggregate_timestep <-
     )
   }
 
-future::plan(future.mirai::mirai_multisession)
+future::plan(future.mirai::mirai_multisession, workers = 4)
 
 gridmet_summaries <-
   gridmet_daily %>%
