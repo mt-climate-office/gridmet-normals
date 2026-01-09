@@ -177,7 +177,7 @@ gridmet_summaries <-
 future::plan(sequential)
 
 ## Calculate Normals
-mirai::daemons(10)
+mirai::daemons(4)
 
 dir.create(
   "data/gridmet/normals",
