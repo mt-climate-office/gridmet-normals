@@ -123,8 +123,8 @@ act workflow_dispatch
 ```
 
 The workflow will:
-1. Install system dependencies (rclone, NetCDF, GDAL, GEOS, PROJ, etc.)
-2. Set up R 4.4.0
+1. Install Homebrew
+2. Install dependencies via Homebrew (R, rclone, NetCDF, GDAL, GEOS, PROJ, udunits)
 3. Install required R packages (tidyverse, sf, terra, normals, etc.)
 4. Run the gridMET normals processing script
 5. Save results to the `data/` directory
