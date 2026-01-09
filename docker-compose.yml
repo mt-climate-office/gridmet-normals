@@ -10,14 +10,5 @@ services:
       # Set timezone if needed
       - TZ=America/Denver
     restart: "no"
-    shm_size: "8g"         # Increase /dev/shm for parallel workloads
+    shm_size: "32g"        # Increase /dev/shm for parallel workloads
     ipc: "host"            # Share IPC namespace with host (helps mirai sockets)
-    # Resource limits (adjust as needed)
-    deploy:
-      resources:
-        limits:
-          cpus: '8'
-          # memory: 16G     # Commented out to allow unlimited memory access
-        reservations:
-          cpus: '8'
-          memory: 16G
