@@ -1,0 +1,19 @@
+# Ignore data directory (will be mounted as volume)
+data/
+
+# Ignore R project files
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.httr-oauth
+
+# Ignore version control
+.git
+.gitignore
+
+# Ignore OS files
+.DS_Store
+
+# Ignore documentation build artifacts
+.quarto

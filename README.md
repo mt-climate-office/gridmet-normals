@@ -35,6 +35,25 @@ The script requires the following R packages:
 
 ## Installation
 
+### Option 1: Docker (Recommended)
+
+The easiest way to run this project is using Docker, which provides a consistent environment with all dependencies pre-installed.
+
+1. Clone this repository:
+```bash
+git clone https://github.com/mt-climate-office/gridmet-normals.git
+cd gridmet-normals
+```
+
+2. Build and run using Docker Compose:
+```bash
+docker-compose up --build
+```
+
+The `data/` directory will be created locally and mounted into the container to persist downloaded data and outputs.
+
+### Option 2: Local R Installation
+
 1. Clone this repository:
 ```bash
 git clone https://github.com/mt-climate-office/gridmet-normals.git
@@ -60,6 +79,38 @@ pak::pak(
 ```
 
 ## Usage
+
+### Running with Docker
+
+**One-time execution:**
+```bash
+docker-compose up
+```
+
+**Automated daily execution with cron:**
+
+1. Make the run script executable (if not already):
+```bash
+chmod +x run-cron.sh
+```
+
+2. Add a cron job to run daily at 2 AM:
+```bash
+crontab -e
+```
+
+Add this line (adjust the path to match your installation):
+```
+0 2 * * * /path/to/gridmet-normals/run-cron.sh
+```
+
+**Manual Docker run without compose:**
+```bash
+docker build -t gridmet-normals .
+docker run -v $(pwd)/data:/app/data gridmet-normals
+```
+
+### Running with Local R Installation
 
 Run the entire script to process gridMET data:
 
