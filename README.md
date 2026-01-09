@@ -123,12 +123,14 @@ act workflow_dispatch
 ```
 
 The workflow will:
-1. Install Homebrew
+1. Install Homebrew (or restore from cache)
 2. Install dependencies via Homebrew (R, rclone, NetCDF, GDAL, GEOS, PROJ, udunits)
-3. Install required R packages (tidyverse, sf, terra, normals, etc.)
+3. Install required R packages (or restore from cache: tidyverse, sf, terra, normals, etc.)
 4. Run the gridMET normals processing script
 5. Save results to the `data/` directory
 6. Create an artifact with the processed data
+
+**Performance:** The workflow uses GitHub Actions caching to save the Homebrew installation and R packages between runs, significantly reducing setup time on subsequent executions.
 
 **Note:** The workflow is configured with `workflow_dispatch` trigger only, meaning it must be triggered manually and will not run automatically on GitHub-hosted runners.
 

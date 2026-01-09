@@ -14,23 +14,43 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
+      - name: Cache Homebrew packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            /home/linuxbrew/.linuxbrew
+          key: ${{ runner.os }}-homebrew-${{ hashFiles('.github/workflows/run-gridmet-normals.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-homebrew-
+      
       - name: Install Homebrew
         run: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          if [ ! -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          fi
           echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> $GITHUB_PATH
       
       - name: Install dependencies with Homebrew
         run: |
           brew install r gdal geos proj netcdf udunits rclone
       
+      - name: Cache R packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            /home/linuxbrew/.linuxbrew/lib/R/library
+          key: ${{ runner.os }}-r-packages-${{ hashFiles('.github/workflows/run-gridmet-normals.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-r-packages-
+      
       - name: Install pak
         run: |
-          R -e 'install.packages("pak", repos = sprintf("https://r-lib.github.io/p/pak/stable/%s/%s/%s", .Platform$pkgType, R.Version()$os, R.Version()$arch))'
+          R -e 'if (!require("pak", quietly = TRUE)) install.packages("pak", repos = sprintf("https://r-lib.github.io/p/pak/stable/%s/%s/%s", .Platform$pkgType, R.Version()$os, R.Version()$arch))'
       
       - name: Install R packages
         run: |
-          R -e 'pak::pak(c("tidyverse", "sf?source", "terra?source", "digest", "furrr", "future.mirai", "mirai", "carrier"))'
-          R -e 'pak::pak("mt-climate-office/normals")'
+          R -e 'pak::pak(c("tidyverse", "sf?source", "terra?source", "digest", "furrr", "future.mirai", "mirai", "carrier"), ask = FALSE)'
+          R -e 'pak::pak("mt-climate-office/normals", ask = FALSE)'
       
       - name: Create data directory
         run: |
