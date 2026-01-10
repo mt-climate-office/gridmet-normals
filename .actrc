@@ -1,0 +1,1 @@
+--container-options "-v $(pwd)/data:/Users/kyle.bocinsky/git/mt-climate-office/gridmet-normals/data"

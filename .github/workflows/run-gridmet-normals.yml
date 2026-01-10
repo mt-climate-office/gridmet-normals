@@ -13,6 +13,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        
+      - name: Install r-base-dev using apt-get
+        run: |
+          apt-get update
+          apt-get -y install r-base-dev
       
       - name: Cache Homebrew packages
         uses: actions/cache@v4
@@ -40,7 +45,7 @@ jobs:
         run: |
           # Check if packages are already installed
           missing_packages=""
-          for pkg in r gdal geos proj netcdf udunits rclone; do
+          for pkg in gcc llvm rclone; do
             if ! brew list $pkg &>/dev/null; then
               missing_packages="$missing_packages $pkg"
             fi
@@ -74,11 +79,7 @@ jobs:
       - name: Create data directory
         run: |
           mkdir -p data/gridmet/daily
-      
-      - name: Set timezone
-        run: |
-          sudo timedatectl set-timezone America/Denver
-      
+
       - name: Run gridMET normals processing
         run: |
           Rscript gridmet-normals.r

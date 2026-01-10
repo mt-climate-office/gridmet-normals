@@ -17,7 +17,15 @@ library(normals)
 library(magrittr)
 library(sf)
 library(terra)
+library(future)
 library(furrr)
+
+
+opts <- furrr::furrr_options(
+  packages   = c("terra", "stringr", "fs", "lubridate"),
+  scheduling = Inf
+)
+
 
 ## 1. Update gridMET archive
 dir.create(
@@ -106,6 +114,7 @@ dir.create(
 
 aggregate_timestep <-
   function(x, func, timestep = "monthly", force = FALSE){
+    library(terra); library(lubridate); library(stringr); library(fs)
     
     outfile <-
       stringr::str_replace(x, "daily", timestep)

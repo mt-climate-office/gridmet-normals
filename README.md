@@ -119,7 +119,7 @@ This repository includes a GitHub Actions workflow that can be run locally using
 
 **Run the workflow locally:**
 ```bash
-act workflow_dispatch
+act workflow_dispatch --container-options "-v $(pwd)/data:/Users/kyle.bocinsky/git/mt-climate-office/gridmet-normals/data"
 ```
 
 The workflow will:
