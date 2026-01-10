@@ -17,7 +17,6 @@ jobs:
         
       - name: Cache apt packages
         uses: actions/cache@v4
-        if: ${{ !env.ACT }}
         with:
           path: |
             /var/cache/apt
@@ -28,12 +27,11 @@ jobs:
         
       - name: Install r-base-dev using apt-get
         run: |
-          sudo apt-get update
-          sudo apt-get -y install r-base-dev
+          apt-get update
+          apt-get -y install r-base-dev
       
       - name: Cache Homebrew packages
         uses: actions/cache@v4
-        if: ${{ !env.ACT }}
         with:
           path: |
             /home/linuxbrew/.linuxbrew
@@ -73,7 +71,6 @@ jobs:
       
       - name: Cache R packages
         uses: actions/cache@v4
-        if: ${{ !env.ACT }}
         with:
           path: |
             /home/linuxbrew/.linuxbrew/lib/R/library
