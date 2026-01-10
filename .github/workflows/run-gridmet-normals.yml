@@ -14,6 +14,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
+      - name: Cache apt packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            /var/cache/apt
+            /var/lib/apt
+          key: ${{ runner.os }}-apt-v1
+          restore-keys: |
+            ${{ runner.os }}-apt-
+        
       - name: Install r-base-dev using apt-get
         run: |
           apt-get update
