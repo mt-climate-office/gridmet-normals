@@ -29,7 +29,7 @@ RUN R -e "install.packages('pak', repos = 'https://r-lib.github.io/p/pak/stable/
       'carrier' \
     ))" && \
     R -e "pak::pak(c( \
-      'mt-climate-office/normals' \
+      'mt-climate-office/normals@562af10dba9317e05599619779233f1122b9eddd' \
     ))"
 
 # Create data directory with appropriate permissions

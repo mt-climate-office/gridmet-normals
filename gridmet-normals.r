@@ -11,7 +11,7 @@
 #   )
 # )
 # 
-# pak::pak("mt-climate-office/normals")
+# pak::pak("mt-climate-office/normals@562af10dba9317e05599619779233f1122b9eddd")  # normals 1.x; 2.0 is a rewrite
 
 library(normals)
 library(magrittr)
