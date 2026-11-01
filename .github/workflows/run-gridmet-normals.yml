@@ -74,7 +74,7 @@ jobs:
       - name: Install R packages
         run: |
           R -e 'pak::pak(c("tidyverse", "sf?source", "terra?source", "digest", "furrr", "future.mirai", "mirai", "carrier"), ask = FALSE)'
-          R -e 'pak::pak("mt-climate-office/normals", ask = FALSE)'
+          R -e 'pak::pak("mt-climate-office/normals@562af10dba9317e05599619779233f1122b9eddd", ask = FALSE)'
       
       - name: Create data directory
         run: |
